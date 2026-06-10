@@ -2,20 +2,23 @@ import express from 'express'
 import mongoose from 'mongoose'
 import multer from 'multer'
 import path from 'path'
+import { config } from 'dotenv'
 
 const app = express();
 import { v2 as cloudinary } from 'cloudinary';
 
+config({path:'.env'})
+
 cloudinary.config({ 
-    cloud_name: 'da2ywxond', 
-    api_key: '914648313471613', 
-    api_secret: 'ziCiFf1Rq6tALXqtwhP7HQuwon4' 
+    cloud_name: process.env.CLAUDE_NAME, 
+    api_key: process.env.API_KEY, 
+    api_secret: process.env.API_SCREAT
 });
 
 
 app.use(express.urlencoded({extended:true}));
 
-mongoose.connect("mongodb+srv://kamandomutum2615_db_user:N80k902lzmbxxPzn@cluster0.rqmefon.mongodb.net/",{
+mongoose.connect(process.env.MONGO_URL,{
     dbName: "NodeJs_image_uploader"
 }).then(()=>console.log('MongoDb is connected...!')).catch((err)=>console.log(err))
 
@@ -63,5 +66,5 @@ app.post('/upload', upload.single('file'), async (req, res, next) => {
   // req.body will hold the text fields, if there were any
 })
 
-const port = 3000;
+const port = process.env.PORT;
 app.listen(port, ()=>console.log(`server is running on port ${port}`))
